@@ -34,13 +34,13 @@ jobs:
         shell: pwsh
         run: |
           $version = '${{ github.ref_name }}'.TrimStart('v')
-          dotnet build AutoStance/AutoStance.csproj -c Release -p:Version=$version
+          dotnet build AutoStanceXIV/AutoStanceXIV.csproj -c Release -p:Version=$version
 
       - name: Créer la release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create '${{ github.ref_name }}' AutoStance/bin/Release/AutoStance/latest.zip --title 'AutoStance ${{ github.ref_name }}' --generate-notes
+        run: gh release create '${{ github.ref_name }}' AutoStanceXIV/bin/Release/AutoStanceXIV/latest.zip --title 'AutoStanceXIV ${{ github.ref_name }}' --generate-notes
 
       - name: Mettre à jour repo.json
         shell: pwsh
@@ -48,10 +48,10 @@ jobs:
           $repoUrl = 'https://github.com/${{ github.repository }}'
           $download = "$repoUrl/releases/download/${{ github.ref_name }}/latest.zip"
 
-          $manifest = Get-Content AutoStance/bin/Release/AutoStance/AutoStance.json -Raw -Encoding utf8 | ConvertFrom-Json
+          $manifest = Get-Content AutoStanceXIV/bin/Release/AutoStanceXIV/AutoStanceXIV.json -Raw -Encoding utf8 | ConvertFrom-Json
           $extra = [ordered]@{
             RepoUrl             = $repoUrl
-            IconUrl             = 'https://raw.githubusercontent.com/${{ github.repository }}/main/AutoStance/images/icon.png'
+            IconUrl             = 'https://raw.githubusercontent.com/${{ github.repository }}/main/AutoStanceXIV/images/icon.png'
             DownloadLinkInstall = $download
             DownloadLinkUpdate  = $download
             DownloadLinkTesting = $download

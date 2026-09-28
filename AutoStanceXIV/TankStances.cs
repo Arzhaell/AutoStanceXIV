@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace AutoStance;
+namespace AutoStanceXIV;
 
 /// <summary>Stance d'un tank : action qui l'active, action qui la dissipe, et buff visible sur le joueur.</summary>
 public readonly record struct TankStance(uint ActionId, uint ReleaseActionId, uint StatusId);

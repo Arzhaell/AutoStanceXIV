@@ -1,7 +1,7 @@
 using System;
 using Dalamud.Configuration;
 
-namespace AutoStance;
+namespace AutoStanceXIV;
 
 public enum StanceMode
 {

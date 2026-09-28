@@ -8,7 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Lumina.Excel.Sheets;
 
-namespace AutoStance;
+namespace AutoStanceXIV;
 
 /// <summary>Surveille la stance du joueur et la remet dans l'état choisi dans la configuration.</summary>
 public sealed unsafe class StanceController : IDisposable

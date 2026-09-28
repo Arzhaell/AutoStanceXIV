@@ -1,4 +1,4 @@
-# <img src="AutoStance/images/icon.png" width="32" alt=""> AutoStance
+# <img src="AutoStanceXIV/images/icon.png" width="32" alt=""> AutoStanceXIV
 
 🇫🇷 [Version française](README.fr.md)
 
@@ -16,9 +16,9 @@ A [Dalamud](https://github.com/goatcorp/Dalamud) plugin for Final Fantasy XIV th
 1. In game, type `/xlsettings` and open the **Experimental** tab.
 2. Under **Custom Plugin Repositories**, paste this URL, click **+**, tick the checkbox and save:
    ```
-   https://raw.githubusercontent.com/Arzhaell/AutoStance/main/repo.json
+   https://raw.githubusercontent.com/Arzhaell/AutoStanceXIV/main/repo.json
    ```
-3. Type `/xlplugins`, search for **AutoStance** and install it.
+3. Type `/xlplugins`, search for **AutoStanceXIV** and install it.
 
 ## Usage
 

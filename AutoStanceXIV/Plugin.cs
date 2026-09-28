@@ -5,7 +5,7 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 
-namespace AutoStance;
+namespace AutoStanceXIV;
 
 public sealed class Plugin : IDalamudPlugin
 {
@@ -23,7 +23,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IDutyState DutyState { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
 
-    private readonly WindowSystem windowSystem = new("AutoStance");
+    private readonly WindowSystem windowSystem = new("AutoStanceXIV");
     private readonly ConfigWindow configWindow;
     private readonly StanceController controller;
     private readonly IDtrBarEntry dtrEntry;
@@ -47,7 +47,7 @@ public sealed class Plugin : IDalamudPlugin
         RegisterCommand();
 
         // Barre d'infos serveur : clic gauche = on/off, clic droit = pause.
-        dtrEntry = DtrBar.Get("AutoStance");
+        dtrEntry = DtrBar.Get("AutoStanceXIV");
         dtrEntry.OnClick = e =>
         {
             if (e.ClickType == MouseClickType.Right)
@@ -78,7 +78,7 @@ public sealed class Plugin : IDalamudPlugin
         UpdateDtrEntry();
 
         if (Configuration.ChatFeedback)
-            ChatGui.Print(Loc.T($"Stance: {Describe(mode)}", $"Stance : {Describe(mode)}"), "AutoStance");
+            ChatGui.Print(Loc.T($"Stance: {Describe(mode)}", $"Stance : {Describe(mode)}"), "AutoStanceXIV");
     }
 
     public void ToggleMode() => SetMode(Configuration.Mode == StanceMode.Enable ? StanceMode.Disable : StanceMode.Enable);
@@ -100,8 +100,8 @@ public sealed class Plugin : IDalamudPlugin
             _ => "Stance: —",
         };
         dtrEntry.Tooltip = Loc.T(
-            $"AutoStance: {Describe(Configuration.Mode)}\nLeft click: on/off — Right click: pause",
-            $"AutoStance : {Describe(Configuration.Mode)}\nClic gauche : on/off — Clic droit : pause");
+            $"AutoStanceXIV: {Describe(Configuration.Mode)}\nLeft click: on/off — Right click: pause",
+            $"AutoStanceXIV : {Describe(Configuration.Mode)}\nClic gauche : on/off — Clic droit : pause");
     }
 
     public static string Describe(StanceMode mode) => mode switch
@@ -169,7 +169,7 @@ public sealed class Plugin : IDalamudPlugin
                 ChatGui.PrintError(
                     Loc.T($"Unknown argument \"{args}\". Use on, off, toggle or pause.",
                           $"Argument inconnu « {args} ». Utilise on, off, toggle ou pause."),
-                    "AutoStance");
+                    "AutoStanceXIV");
                 break;
         }
     }

@@ -1,6 +1,6 @@
 using System;
 
-namespace AutoStance;
+namespace AutoStanceXIV;
 
 public enum PluginLanguage
 {

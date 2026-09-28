@@ -2,14 +2,14 @@ using System;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 
-namespace AutoStance;
+namespace AutoStanceXIV;
 
 public sealed class ConfigWindow : Window
 {
     private readonly Plugin plugin;
 
     public ConfigWindow(Plugin plugin)
-        : base("AutoStance###AutoStanceConfig", ImGuiWindowFlags.AlwaysAutoResize)
+        : base("AutoStanceXIV###AutoStanceConfig", ImGuiWindowFlags.AlwaysAutoResize)
     {
         this.plugin = plugin;
     }

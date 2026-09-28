@@ -1,0 +1,28 @@
+[
+  {
+    "Author": "Arzhael",
+    "Name": "AutoStanceXIV",
+    "InternalName": "AutoStanceXIV",
+    "AssemblyVersion": "1.0.0.0",
+    "Description": "Keeps your tank stance in the state you choose (on or off) on every tank: Paladin/Gladiator, Warrior/Marauder, Dark Knight and Gunbreaker.\nApply it always, or only at specific moments: zone or job change, countdown, pull (bosses only), duty recommence after a wipe.\nAvailable in English and French. Command: /autostance",
+    "ApplicableVersion": "any",
+    "Tags": [
+      "tank",
+      "stance",
+      "job"
+    ],
+    "DalamudApiLevel": 15,
+    "LoadRequiredState": 0,
+    "LoadSync": false,
+    "CanUnloadAsync": false,
+    "LoadPriority": 0,
+    "Punchline": "Automatically turns your tank stance on or off.",
+    "AcceptsFeedback": true,
+    "RepoUrl": "https://github.com/Arzhaell/AutoStanceXIV",
+    "IconUrl": "https://raw.githubusercontent.com/Arzhaell/AutoStanceXIV/main/AutoStanceXIV/images/icon.png",
+    "DownloadLinkInstall": "https://github.com/Arzhaell/AutoStanceXIV/releases/download/v1.0.0/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/Arzhaell/AutoStanceXIV/releases/download/v1.0.0/latest.zip",
+    "DownloadLinkTesting": "https://github.com/Arzhaell/AutoStanceXIV/releases/download/v1.0.0/latest.zip",
+    "LastUpdate": 1790638292
+  }
+]

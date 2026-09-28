@@ -36,11 +36,20 @@ jobs:
           $version = '${{ github.ref_name }}'.TrimStart('v')
           dotnet build AutoStanceXIV/AutoStanceXIV.csproj -c Release -p:Version=$version
 
-      - name: Créer la release
+      # Si la release existe déjà (tag repoussé, relance du workflow), on remplace juste le zip.
+      - name: Créer ou mettre à jour la release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create '${{ github.ref_name }}' AutoStanceXIV/bin/Release/AutoStanceXIV/latest.zip --title 'AutoStanceXIV ${{ github.ref_name }}' --generate-notes
+        run: |
+          $tag = '${{ github.ref_name }}'
+          $zip = 'AutoStanceXIV/bin/Release/AutoStanceXIV/latest.zip'
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $zip --clobber
+          } else {
+            gh release create $tag $zip --title "AutoStanceXIV $tag" --generate-notes
+          }
 
       - name: Mettre à jour repo.json
         shell: pwsh

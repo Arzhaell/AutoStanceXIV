@@ -74,8 +74,9 @@ jobs:
           git checkout main
           ConvertTo-Json -InputObject @($manifest) -Depth 5 | Set-Content repo.json -Encoding utf8
 
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # Le commit de repo.json est signé au nom du mainteneur plutôt que du robot github-actions.
+          git config user.name 'Arzhael'
+          git config user.email '33180615+Arzhaell@users.noreply.github.com'
           git add repo.json
           git commit -m 'repo.json : ${{ github.ref_name }}'
           git push origin main

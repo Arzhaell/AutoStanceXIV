@@ -1,0 +1,56 @@
+# <img src="AutoStance/images/icon.png" width="32" alt=""> AutoStance
+
+🇬🇧 [English version](README.md)
+
+Plugin [Dalamud](https://github.com/goatcorp/Dalamud) pour Final Fantasy XIV qui active ou retire automatiquement la stance de tank, sur tous les tanks :
+
+| Job | Stance |
+|---|---|
+| Paladin / Gladiateur | Volonté de fer |
+| Guerrier / Maraudeur | Défi |
+| Chevalier noir | Férocité |
+| Pistosabreur | Garde royale |
+
+## Installation
+
+1. En jeu, tape `/xlsettings` et ouvre l'onglet **Expérimental**.
+2. Dans **Custom Plugin Repositories**, ajoute cette adresse, clique sur **+**, coche la case puis enregistre :
+   ```
+   https://raw.githubusercontent.com/Arzhaell/AutoStance/main/repo.json
+   ```
+3. Tape `/xlplugins`, cherche **AutoStance** et installe-le.
+
+## Utilisation
+
+`/autostance` ouvre la configuration :
+
+- **Mode** : activer automatiquement, retirer automatiquement, ou pause.
+- **Quand l'appliquer** :
+  - *En permanence* : la stance est remise dans l'état voulu dès qu'elle en sort.
+  - *À certains moments* (combinables) : entrée en zone / changement de job / résurrection, compte à rebours (X s avant la fin), au pull (option boss uniquement), reprise de l'instance après un wipe.
+- **Options** : seulement en instance, autorisé ou non en combat, affichage dans la barre d'infos serveur, message dans le chat.
+- **Langue** : auto (suit Dalamud), anglais ou français.
+
+Changer de mode rapidement :
+
+| Commande | Effet |
+|---|---|
+| `/autostance on` | garder la stance activée |
+| `/autostance off` | garder la stance retirée |
+| `/autostance toggle` | basculer entre on et off |
+| `/autostance pause` | ne plus toucher à la stance |
+
+Dans la barre d'infos serveur (« Stance: ON ») : clic gauche pour basculer on/off, clic droit pour mettre en pause.
+
+## Avertissement
+
+Comme tout outil tiers, l'utilisation de Dalamud et de ses plugins est contraire aux conditions d'utilisation de FFXIV. Tu l'utilises à tes risques.
+
+## Publier une nouvelle version
+
+Pousser un tag `vX.Y.Z` suffit : le workflow GitHub compile le plugin, crée la release et met à jour `repo.json`.
+
+```bash
+git tag v1.1.0
+git push origin v1.1.0
+```

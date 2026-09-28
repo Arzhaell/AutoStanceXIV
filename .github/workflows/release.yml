@@ -1,0 +1,72 @@
+# Publie une nouvelle version quand on pousse un tag vX.Y.Z :
+#   git tag v1.1.0
+#   git push origin v1.1.0
+# Le workflow compile le plugin, crée la release GitHub avec latest.zip,
+# puis met à jour repo.json (le fichier que Dalamud lit) sur la branche main.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Télécharger Dalamud
+        shell: pwsh
+        run: |
+          Invoke-WebRequest https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile dalamud.zip
+          Expand-Archive dalamud.zip -DestinationPath "$env:AppData\XIVLauncher\addon\Hooks\dev" -Force
+
+      - name: Compiler
+        shell: pwsh
+        run: |
+          $version = '${{ github.ref_name }}'.TrimStart('v')
+          dotnet build AutoStance/AutoStance.csproj -c Release -p:Version=$version
+
+      - name: Créer la release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create '${{ github.ref_name }}' AutoStance/bin/Release/AutoStance/latest.zip --title 'AutoStance ${{ github.ref_name }}' --generate-notes
+
+      - name: Mettre à jour repo.json
+        shell: pwsh
+        run: |
+          $repoUrl = 'https://github.com/${{ github.repository }}'
+          $download = "$repoUrl/releases/download/${{ github.ref_name }}/latest.zip"
+
+          $manifest = Get-Content AutoStance/bin/Release/AutoStance/AutoStance.json -Raw -Encoding utf8 | ConvertFrom-Json
+          $extra = [ordered]@{
+            RepoUrl             = $repoUrl
+            IconUrl             = 'https://raw.githubusercontent.com/${{ github.repository }}/main/AutoStance/images/icon.png'
+            DownloadLinkInstall = $download
+            DownloadLinkUpdate  = $download
+            DownloadLinkTesting = $download
+            LastUpdate          = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+          }
+          foreach ($key in $extra.Keys) {
+            $manifest | Add-Member -NotePropertyName $key -NotePropertyValue $extra[$key] -Force
+          }
+
+          git fetch origin main
+          git checkout main
+          ConvertTo-Json -InputObject @($manifest) -Depth 5 | Set-Content repo.json -Encoding utf8
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add repo.json
+          git commit -m 'repo.json : ${{ github.ref_name }}'
+          git push origin main

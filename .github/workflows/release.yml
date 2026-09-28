@@ -57,10 +57,10 @@ jobs:
           $repoUrl = 'https://github.com/${{ github.repository }}'
           $download = "$repoUrl/releases/download/${{ github.ref_name }}/latest.zip"
 
+          # RepoUrl et IconUrl viennent du manifeste du plugin (AutoStanceXIV.json) :
+          # ils doivent y être pour que l'icône s'affiche aussi une fois le plugin installé.
           $manifest = Get-Content AutoStanceXIV/bin/Release/AutoStanceXIV/AutoStanceXIV.json -Raw -Encoding utf8 | ConvertFrom-Json
           $extra = [ordered]@{
-            RepoUrl             = $repoUrl
-            IconUrl             = 'https://raw.githubusercontent.com/${{ github.repository }}/main/AutoStanceXIV/images/icon.png'
             DownloadLinkInstall = $download
             DownloadLinkUpdate  = $download
             DownloadLinkTesting = $download

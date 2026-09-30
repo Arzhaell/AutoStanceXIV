@@ -24,6 +24,14 @@ A [Dalamud](https://github.com/goatcorp/Dalamud) plugin for Final Fantasy XIV th
 
 `/autostance` opens the settings:
 
+- **Classic or advanced**:
+  - *Classic*: the same settings everywhere.
+  - *Advanced*: one tab of settings per type of duty. Advanced settings start as a copy of the classic ones.
+    - **Open world**: everything outside of duties (FATEs, field operations…)
+    - **Dungeons**: including variant and deep dungeons, guildhests and treasure dungeons
+    - **Trials**: normal, extreme and unreal
+    - **Raids**: 8-player raids — normal, savage and ultimate
+    - **Alliance**: 24-player alliance raids, including chaotic
 - **Mode**: enable automatically, remove automatically, or pause.
 - **When to apply it**:
   - *Always*: the stance is put back in the desired state as soon as it changes.
@@ -41,6 +49,8 @@ Quick mode switching:
 | `/autostance pause` | stop touching the stance |
 
 In the server info bar ("Stance: ON"): left click toggles on/off, right click pauses.
+
+In advanced mode, the commands and the server info bar act on the type of duty you are currently in.
 
 ## Disclaimer
 

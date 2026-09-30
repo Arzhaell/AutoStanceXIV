@@ -63,6 +63,20 @@ public sealed unsafe class StanceController : IDisposable
     private uint lastTerritory;
     private uint lastClassJob;
 
+    // Type d'instance en cours, recalculé seulement quand l'instance change.
+    private bool kindKnown;
+    private bool lastInDuty;
+    private uint lastDutyId;
+
+    /// <summary>Type d'instance dans lequel se trouve le joueur.</summary>
+    public InstanceKind CurrentKind { get; private set; } = InstanceKind.OpenWorld;
+
+    /// <summary>Déclenché quand le joueur change de type d'instance.</summary>
+    public event System.Action? KindChanged;
+
+    // Réglages en vigueur : le profil classique, ou celui du type d'instance en mode avancé.
+    private StanceProfile Profile => configuration.GetProfile(CurrentKind);
+
     public StanceController(Configuration configuration)
     {
         this.configuration = configuration;
@@ -95,16 +109,22 @@ public sealed unsafe class StanceController : IDisposable
             return;
         }
 
-        DetectZoneJobAndRevive(player.ClassJob.RowId, player.IsDead);
-        DetectPull();
-        DetectCountdown();
-        DetectDutyRecommence();
+        // En mode avancé, ce qui était en attente pour l'ancien type d'instance ne vaut plus pour le nouveau.
+        var kindChanged = UpdateInstanceKind() && configuration.AdvancedMode;
+        if (kindChanged)
+            ClearPending();
+        var profile = Profile;
+
+        DetectZoneJobAndRevive(profile, kindChanged, player.ClassJob.RowId, player.IsDead);
+        DetectPull(profile);
+        DetectCountdown(profile);
+        DetectDutyRecommence(profile);
         if (player.IsDead)
             return;
 
-        if (configuration.Mode == StanceMode.None)
+        if (profile.Mode == StanceMode.None)
             return;
-        if (configuration.Trigger == TriggerMode.OnEvents && !pending)
+        if (profile.Trigger == TriggerMode.OnEvents && !pending)
             return;
 
         if (!TankStances.TryGet(player.ClassJob.RowId, out var stance))
@@ -113,7 +133,7 @@ public sealed unsafe class StanceController : IDisposable
             return;
         }
 
-        var wantActive = configuration.Mode == StanceMode.Enable;
+        var wantActive = profile.Mode == StanceMode.Enable;
         var isActive = player.StatusList.Any(s => s.StatusId == stance.StatusId);
         if (isActive == wantActive)
         {
@@ -143,12 +163,36 @@ public sealed unsafe class StanceController : IDisposable
         }
     }
 
-    private void DetectZoneJobAndRevive(uint classJob, bool isDead)
+    /// <summary>Met à jour CurrentKind. Renvoie true si le type d'instance vient de changer.</summary>
+    private bool UpdateInstanceKind()
+    {
+        var inDuty = InstanceKinds.IsInDuty();
+        var dutyId = inDuty ? InstanceKinds.CurrentDutyId(Plugin.ClientState.TerritoryType) : 0;
+        if (kindKnown && inDuty == lastInDuty && dutyId == lastDutyId)
+            return false;
+
+        kindKnown = true;
+        lastInDuty = inDuty;
+        lastDutyId = dutyId;
+
+        var kind = InstanceKinds.Classify(inDuty, dutyId);
+        Plugin.Log.Debug($"Instance: {kind} (duty {dutyId}).");
+        if (kind == CurrentKind)
+            return false;
+
+        CurrentKind = kind;
+        KindChanged?.Invoke();
+        return true;
+    }
+
+    private void DetectZoneJobAndRevive(StanceProfile profile, bool kindChanged, uint classJob, bool isDead)
     {
         uint territory = Plugin.ClientState.TerritoryType;
 
-        var changed = !wasPresent || territory != lastTerritory || classJob != lastClassJob || (wasDead && !isDead);
-        if (changed && configuration.TriggerOnZoneOrJob)
+        // Un changement de type d'instance compte comme une entrée en zone : le jeu peut signaler l'instance
+        // un instant après l'arrivée du joueur, et c'est alors le nouveau profil qui doit s'appliquer.
+        var changed = !wasPresent || kindChanged || territory != lastTerritory || classJob != lastClassJob || (wasDead && !isDead);
+        if (changed && profile.TriggerOnZoneOrJob)
             Trigger("zone change, job change or resurrection");
 
         wasPresent = true;
@@ -157,7 +201,7 @@ public sealed unsafe class StanceController : IDisposable
         lastClassJob = classJob;
     }
 
-    private void DetectPull()
+    private void DetectPull(StanceProfile profile)
     {
         if (!Plugin.Condition[ConditionFlag.InCombat])
         {
@@ -166,20 +210,20 @@ public sealed unsafe class StanceController : IDisposable
             return;
         }
 
-        if (configuration.Trigger != TriggerMode.OnEvents || !configuration.TriggerOnPull || pullDetected)
+        if (profile.Trigger != TriggerMode.OnEvents || !profile.TriggerOnPull || pullDetected)
             return;
 
         // Avec « boss uniquement », on continue de chercher pendant tout le combat :
         // ça couvre aussi un boss qui rejoint un combat déjà commencé contre des adds.
-        if (!configuration.PullBossOnly || IsBossEngaged())
+        if (!profile.PullBossOnly || IsBossEngaged())
         {
             pullDetected = true;
             pendingFromPull = true;
-            Trigger(configuration.PullBossOnly ? "boss pull" : "combat start");
+            Trigger(profile.PullBossOnly ? "boss pull" : "combat start");
         }
     }
 
-    private void DetectCountdown()
+    private void DetectCountdown(StanceProfile profile)
     {
         var countdown = AgentCountDownSettingDialog.Instance();
         if (countdown == null || !countdown->Active || countdown->TimeRemaining <= 0)
@@ -188,23 +232,23 @@ public sealed unsafe class StanceController : IDisposable
             return;
         }
 
-        if (!configuration.TriggerOnCountdown || countdownDetected)
+        if (!profile.TriggerOnCountdown || countdownDetected)
             return;
 
-        if (countdown->TimeRemaining <= configuration.CountdownSeconds)
+        if (countdown->TimeRemaining <= profile.CountdownSeconds)
         {
             countdownDetected = true;
             Trigger($"countdown ({countdown->TimeRemaining:0.0} s left)");
         }
     }
 
-    private void DetectDutyRecommence()
+    private void DetectDutyRecommence(StanceProfile profile)
     {
         if (!dutyRecommenced)
             return;
 
         dutyRecommenced = false;
-        if (configuration.TriggerOnDutyRecommence)
+        if (profile.TriggerOnDutyRecommence)
             Trigger("duty recommence");
     }
 
@@ -243,7 +287,8 @@ public sealed unsafe class StanceController : IDisposable
             return false;
         if (Plugin.Condition.Any(BlockingConditions))
             return false;
-        if (configuration.OnlyInDuty && !Plugin.Condition.Any(ConditionFlag.BoundByDuty, ConditionFlag.BoundByDuty56, ConditionFlag.BoundByDuty95))
+        // En mode avancé, « hors instance » a son propre profil : l'option ne s'applique qu'au mode classique.
+        if (!configuration.AdvancedMode && configuration.OnlyInDuty && !InstanceKinds.IsInDuty())
             return false;
         if (!configuration.AllowInCombat && !pendingFromPull && Plugin.Condition[ConditionFlag.InCombat])
             return false;

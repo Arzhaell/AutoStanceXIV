@@ -32,7 +32,7 @@ public sealed class Plugin : IDalamudPlugin
 
     public Plugin()
     {
-        Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        Configuration = LoadConfiguration();
         Configuration.Migrate();
         Loc.Update(Configuration.Language);
         controller = new StanceController(Configuration);
@@ -56,10 +56,32 @@ public sealed class Plugin : IDalamudPlugin
                 ToggleMode();
         };
         UpdateDtrEntry();
+        controller.KindChanged += UpdateDtrEntry;
     }
+
+    // Un fichier de configuration illisible ne doit pas empêcher le plugin de se charger : on repart des réglages par défaut.
+    private static Configuration LoadConfiguration()
+    {
+        try
+        {
+            return PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        }
+        catch (System.Exception e)
+        {
+            Log.Error(e, "Could not read the configuration, falling back to default settings.");
+            return new Configuration();
+        }
+    }
+
+    /// <summary>Type d'instance dans lequel se trouve le joueur.</summary>
+    public InstanceKind CurrentKind => controller.CurrentKind;
+
+    /// <summary>Réglages en vigueur là où se trouve le joueur (profil classique, ou celui du type d'instance).</summary>
+    public StanceProfile ActiveProfile => Configuration.GetProfile(controller.CurrentKind);
 
     public void Dispose()
     {
+        controller.KindChanged -= UpdateDtrEntry;
         dtrEntry.Remove();
         CommandManager.RemoveHandler(CommandName);
         PluginInterface.LanguageChanged -= OnDalamudLanguageChanged;
@@ -70,18 +92,29 @@ public sealed class Plugin : IDalamudPlugin
         controller.Dispose();
     }
 
+    /// <summary>Change le mode là où se trouve le joueur (commande ou barre d'infos serveur).</summary>
     public void SetMode(StanceMode mode)
     {
-        Configuration.Mode = mode;
+        ActiveProfile.Mode = mode;
         Configuration.Save();
-        controller.RequestApply();
-        UpdateDtrEntry();
+        OnSettingsChanged();
 
-        if (Configuration.ChatFeedback)
-            ChatGui.Print(Loc.T($"Stance: {Describe(mode)}", $"Stance : {Describe(mode)}"), "AutoStanceXIV");
+        if (!Configuration.ChatFeedback)
+            return;
+
+        // En mode avancé, le changement ne vaut que pour le type d'instance en cours : on le précise.
+        var where = Configuration.AdvancedMode ? $" ({InstanceKinds.Name(CurrentKind)})" : string.Empty;
+        ChatGui.Print(Loc.T($"Stance{where}: {Describe(mode)}", $"Stance{where} : {Describe(mode)}"), "AutoStanceXIV");
     }
 
-    public void ToggleMode() => SetMode(Configuration.Mode == StanceMode.Enable ? StanceMode.Disable : StanceMode.Enable);
+    public void ToggleMode() => SetMode(ActiveProfile.Mode == StanceMode.Enable ? StanceMode.Disable : StanceMode.Enable);
+
+    /// <summary>À appeler après une modification des réglages : applique le nouvel état et rafraîchit l'affichage.</summary>
+    public void OnSettingsChanged()
+    {
+        controller.RequestApply();
+        UpdateDtrEntry();
+    }
 
     public void SetLanguage(PluginLanguage language)
     {
@@ -92,16 +125,19 @@ public sealed class Plugin : IDalamudPlugin
 
     public void UpdateDtrEntry()
     {
+        var mode = ActiveProfile.Mode;
         dtrEntry.Shown = Configuration.ShowInServerBar;
-        dtrEntry.Text = Configuration.Mode switch
+        dtrEntry.Text = mode switch
         {
             StanceMode.Enable => "Stance: ON",
             StanceMode.Disable => "Stance: OFF",
             _ => "Stance: —",
         };
+
+        var where = Configuration.AdvancedMode ? $"\n{InstanceKinds.Name(CurrentKind)}" : string.Empty;
         dtrEntry.Tooltip = Loc.T(
-            $"AutoStanceXIV: {Describe(Configuration.Mode)}\nLeft click: on/off — Right click: pause",
-            $"AutoStanceXIV : {Describe(Configuration.Mode)}\nClic gauche : on/off — Clic droit : pause");
+            $"AutoStanceXIV: {Describe(mode)}{where}\nLeft click: on/off — Right click: pause",
+            $"AutoStanceXIV : {Describe(mode)}{where}\nClic gauche : on/off — Clic droit : pause");
     }
 
     public static string Describe(StanceMode mode) => mode switch
@@ -134,12 +170,14 @@ public sealed class Plugin : IDalamudPlugin
                 + "/autostance on → keep the stance on\n"
                 + "/autostance off → keep the stance off\n"
                 + "/autostance toggle → switch between on and off\n"
-                + "/autostance pause → stop touching the stance",
+                + "/autostance pause → stop touching the stance\n"
+                + "In advanced mode, these apply to the type of duty you are in.",
                 "Ouvre la configuration.\n"
                 + "/autostance on → garder la stance activée\n"
                 + "/autostance off → garder la stance retirée\n"
                 + "/autostance toggle → basculer entre on et off\n"
-                + "/autostance pause → ne plus toucher à la stance"),
+                + "/autostance pause → ne plus toucher à la stance\n"
+                + "En mode avancé, ces commandes s'appliquent au type d'instance où tu te trouves."),
         });
     }
 

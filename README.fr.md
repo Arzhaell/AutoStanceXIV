@@ -24,6 +24,14 @@ Plugin [Dalamud](https://github.com/goatcorp/Dalamud) pour Final Fantasy XIV qui
 
 `/autostance` ouvre la configuration :
 
+- **Classique ou avancé** :
+  - *Classique* : les mêmes réglages partout.
+  - *Avancé* : un onglet de réglages par type d'instance. Les réglages avancés partent d'une copie des réglages classiques.
+    - **ALÉA** : tout ce qui est hors instance (ALÉA, monde ouvert, opérations de terrain…)
+    - **Donjon** : y compris donjons spéciaux et sans fond, opérations de guilde et chasses aux trésors
+    - **Défis** : normaux, extrêmes et irréels
+    - **Raid** : raids à 8 — normaux, sadiques et fatals
+    - **Alliance** : raids en alliance à 24, y compris chaotiques
 - **Mode** : activer automatiquement, retirer automatiquement, ou pause.
 - **Quand l'appliquer** :
   - *En permanence* : la stance est remise dans l'état voulu dès qu'elle en sort.
@@ -41,6 +49,8 @@ Changer de mode rapidement :
 | `/autostance pause` | ne plus toucher à la stance |
 
 Dans la barre d'infos serveur (« Stance: ON ») : clic gauche pour basculer on/off, clic droit pour mettre en pause.
+
+En mode avancé, les commandes et la barre d'infos serveur agissent sur le type d'instance où tu te trouves.
 
 ## Avertissement
 

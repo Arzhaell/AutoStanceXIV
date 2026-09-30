@@ -2,7 +2,7 @@
   "Author": "Arzhael",
   "Name": "AutoStanceXIV",
   "Punchline": "Automatically turns your tank stance on or off.",
-  "Description": "Keeps your tank stance in the state you choose (on or off) on every tank: Paladin/Gladiator, Warrior/Marauder, Dark Knight and Gunbreaker.\nApply it always, or only at specific moments: zone or job change, countdown, pull (bosses only), duty recommence after a wipe.\nAvailable in English and French. Command: /autostance",
+  "Description": "Keeps your tank stance in the state you choose (on or off) on every tank: Paladin/Gladiator, Warrior/Marauder, Dark Knight and Gunbreaker.\nApply it always, or only at specific moments: zone or job change, countdown, pull (bosses only), duty recommence after a wipe.\nClassic mode uses the same settings everywhere; advanced mode has separate settings for the open world, dungeons, trials, raids and alliance raids.\nAvailable in English and French. Command: /autostance",
   "ApplicableVersion": "any",
   "Tags": [ "tank", "stance", "job" ],
   "RepoUrl": "https://github.com/Arzhaell/AutoStanceXIV",

@@ -3,8 +3,8 @@
     "Author": "Arzhael",
     "Name": "AutoStanceXIV",
     "InternalName": "AutoStanceXIV",
-    "AssemblyVersion": "1.1.0.0",
-    "Description": "Keeps your tank stance in the state you choose (on or off) on every tank: Paladin/Gladiator, Warrior/Marauder, Dark Knight and Gunbreaker.\nApply it always, or only at specific moments: zone or job change, countdown, pull (bosses only), duty recommence after a wipe.\nClassic mode uses the same settings everywhere; advanced mode has separate settings for the open world, dungeons, trials, raids and alliance raids.\nAvailable in English and French. Command: /autostance",
+    "AssemblyVersion": "1.2.0.0",
+    "Description": "Keeps your tank stance in the state you choose (on or off) on every tank: Paladin/Gladiator, Warrior/Marauder, Dark Knight and Gunbreaker.\nApply it always, or only at specific moments: zone change, resurrection, job change, countdown, pull (bosses only), duty recommence after a wipe.\nClassic mode uses the same settings everywhere; advanced mode has separate settings for the open world, dungeons, trials, raids and alliance raids.\nAvailable in English and French. Command: /autostance",
     "ApplicableVersion": "any",
     "RepoUrl": "https://github.com/Arzhaell/AutoStanceXIV",
     "Tags": [
@@ -20,9 +20,9 @@
     "IconUrl": "https://raw.githubusercontent.com/Arzhaell/AutoStanceXIV/main/AutoStanceXIV/images/icon.png",
     "Punchline": "Automatically turns your tank stance on or off.",
     "AcceptsFeedback": true,
-    "DownloadLinkInstall": "https://github.com/Arzhaell/AutoStanceXIV/releases/download/v1.1.0/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/Arzhaell/AutoStanceXIV/releases/download/v1.1.0/latest.zip",
-    "DownloadLinkTesting": "https://github.com/Arzhaell/AutoStanceXIV/releases/download/v1.1.0/latest.zip",
-    "LastUpdate": 1790788813
+    "DownloadLinkInstall": "https://github.com/Arzhaell/AutoStanceXIV/releases/download/v1.2.0/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/Arzhaell/AutoStanceXIV/releases/download/v1.2.0/latest.zip",
+    "DownloadLinkTesting": "https://github.com/Arzhaell/AutoStanceXIV/releases/download/v1.2.0/latest.zip",
+    "LastUpdate": 1791292337
   }
 ]

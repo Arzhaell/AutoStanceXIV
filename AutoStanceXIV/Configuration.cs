@@ -35,12 +35,27 @@ public class StanceProfile
     public TriggerMode Trigger { get; set; } = TriggerMode.Continuous;
 
     // Moments utilisés quand Trigger == OnEvents.
-    public bool TriggerOnZoneOrJob { get; set; } = true;
+    public bool TriggerOnZoneChange { get; set; } = true;
+    public bool TriggerOnResurrection { get; set; } = true;
+    public bool TriggerOnJobChange { get; set; } = true;
     public bool TriggerOnPull { get; set; } = false;
     public bool PullBossOnly { get; set; } = true;
     public bool TriggerOnCountdown { get; set; } = false;
     public int CountdownSeconds { get; set; } = 5;
     public bool TriggerOnDutyRecommence { get; set; } = false;
+
+    // Jusqu'à la 1.1.0, entrée en zone, résurrection et changement de job formaient une seule case.
+    // Lue dans les anciens fichiers pour régler les trois cases, jamais réécrite (pas de getter).
+    [JsonProperty(LegacyZoneOrJobKey)]
+    private bool LegacyTriggerOnZoneOrJob
+    {
+        set => SetZoneResurrectionAndJob(value);
+    }
+
+    internal const string LegacyZoneOrJobKey = "TriggerOnZoneOrJob";
+
+    internal void SetZoneResurrectionAndJob(bool value) =>
+        TriggerOnZoneChange = TriggerOnResurrection = TriggerOnJobChange = value;
 
     public StanceProfile Clone() => (StanceProfile)MemberwiseClone();
 }
@@ -48,7 +63,8 @@ public class StanceProfile
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int CurrentVersion = 2;
+    // 3 : entrée en zone, résurrection et changement de job séparés.
+    internal const int CurrentVersion = 3;
 
     public int Version { get; set; } = CurrentVersion;
 
@@ -71,8 +87,11 @@ public class Configuration : IPluginConfiguration
 
     public void Save() => Plugin.PluginInterface.SavePluginConfig(this);
 
-    /// <summary>Convertit une configuration enregistrée par une version précédente et complète les profils manquants.</summary>
-    public void Migrate()
+    /// <summary>
+    /// Convertit une configuration enregistrée par une version précédente et complète les profils manquants.
+    /// Renvoie true si quelque chose a changé et doit être enregistré.
+    /// </summary>
+    public bool Migrate()
     {
         var changed = false;
 
@@ -82,7 +101,7 @@ public class Configuration : IPluginConfiguration
         if (legacy != null && legacy.ContainsKey(nameof(StanceProfile.Mode)))
         {
             Classic.Mode = ReadLegacy(nameof(StanceProfile.Mode), Classic.Mode);
-            Classic.TriggerOnZoneOrJob = ReadLegacy(nameof(StanceProfile.TriggerOnZoneOrJob), Classic.TriggerOnZoneOrJob);
+            Classic.SetZoneResurrectionAndJob(ReadLegacy(StanceProfile.LegacyZoneOrJobKey, Classic.TriggerOnZoneChange));
             Classic.TriggerOnPull = ReadLegacy(nameof(StanceProfile.TriggerOnPull), Classic.TriggerOnPull);
             Classic.PullBossOnly = ReadLegacy(nameof(StanceProfile.PullBossOnly), Classic.PullBossOnly);
             Classic.TriggerOnCountdown = ReadLegacy(nameof(StanceProfile.TriggerOnCountdown), Classic.TriggerOnCountdown);
@@ -94,7 +113,7 @@ public class Configuration : IPluginConfiguration
             if (trigger == 2)
             {
                 Classic.Trigger = TriggerMode.OnEvents;
-                Classic.TriggerOnZoneOrJob = false;
+                Classic.SetZoneResurrectionAndJob(false);
                 Classic.TriggerOnPull = true;
             }
             else
@@ -126,8 +145,7 @@ public class Configuration : IPluginConfiguration
             changed = true;
         }
 
-        if (changed)
-            Save();
+        return changed;
     }
 
     private T ReadLegacy<T>(string key, T fallback) =>

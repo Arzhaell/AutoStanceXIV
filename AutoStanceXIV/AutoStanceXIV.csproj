@@ -10,4 +10,8 @@
     <!-- Dalamud affiche images/icon.png (à côté de la DLL) comme icône du plugin. -->
     <None Include="images\icon.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="AutoStanceXIV.Tests" />
+  </ItemGroup>
 </Project>

@@ -191,9 +191,16 @@ public sealed unsafe class StanceController : IDisposable
 
         // Un changement de type d'instance compte comme une entrée en zone : le jeu peut signaler l'instance
         // un instant après l'arrivée du joueur, et c'est alors le nouveau profil qui doit s'appliquer.
-        var changed = !wasPresent || kindChanged || territory != lastTerritory || classJob != lastClassJob || (wasDead && !isDead);
-        if (changed && profile.TriggerOnZoneOrJob)
-            Trigger("zone change, job change or resurrection");
+        var zoneChanged = !wasPresent || kindChanged || territory != lastTerritory;
+        var jobChanged = wasPresent && classJob != lastClassJob;
+        var revived = wasDead && !isDead;
+
+        if (zoneChanged && profile.TriggerOnZoneChange)
+            Trigger("zone change");
+        if (jobChanged && profile.TriggerOnJobChange)
+            Trigger("job change");
+        if (revived && profile.TriggerOnResurrection)
+            Trigger("resurrection");
 
         wasPresent = true;
         wasDead = isDead;

@@ -33,7 +33,8 @@ public sealed class Plugin : IDalamudPlugin
     public Plugin()
     {
         Configuration = LoadConfiguration();
-        Configuration.Migrate();
+        if (Configuration.Migrate())
+            Configuration.Save();
         Loc.Update(Configuration.Language);
         controller = new StanceController(Configuration);
 

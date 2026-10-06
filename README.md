@@ -35,7 +35,7 @@ A [Dalamud](https://github.com/goatcorp/Dalamud) plugin for Final Fantasy XIV th
 - **Mode**: enable automatically, remove automatically, or pause.
 - **When to apply it**:
   - *Always*: the stance is put back in the desired state as soon as it changes.
-  - *At specific moments* (can be combined): zone change / job change / resurrection, countdown (X s before the end), on pull (optionally bosses only), duty recommence after a wipe.
+  - *At specific moments* (can be combined): zone change, resurrection, job change, countdown (X s before the end), on pull (optionally bosses only), duty recommence after a wipe.
 - **Options**: only in duties, allow in combat, show in the server info bar, chat message.
 - **Language**: auto (follows Dalamud), English or French.
 

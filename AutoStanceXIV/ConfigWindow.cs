@@ -143,8 +143,11 @@ public sealed class ConfigWindow : Window
         ImGui.Indent();
         ImGui.BeginDisabled(profile.Trigger != TriggerMode.OnEvents);
 
-        Checkbox(Loc.T("Zone change, job change, resurrection", "Entrée en zone, changement de job, résurrection"),
-                 profile.TriggerOnZoneOrJob, v => profile.TriggerOnZoneOrJob = v);
+        Checkbox(Loc.T("Zone change", "Entrée en zone"), profile.TriggerOnZoneChange, v => profile.TriggerOnZoneChange = v);
+        ImGui.SameLine();
+        Checkbox(Loc.T("Resurrection", "Résurrection"), profile.TriggerOnResurrection, v => profile.TriggerOnResurrection = v);
+        ImGui.SameLine();
+        Checkbox(Loc.T("Job change", "Changement de job"), profile.TriggerOnJobChange, v => profile.TriggerOnJobChange = v);
 
         Checkbox(Loc.T("Countdown", "Compte à rebours"), profile.TriggerOnCountdown, v => profile.TriggerOnCountdown = v);
         Tooltip(Loc.T("So the stance is in place before the first hit.", "Pour que la stance soit en place avant le premier coup."));

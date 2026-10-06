@@ -35,7 +35,7 @@ Plugin [Dalamud](https://github.com/goatcorp/Dalamud) pour Final Fantasy XIV qui
 - **Mode** : activer automatiquement, retirer automatiquement, ou pause.
 - **Quand l'appliquer** :
   - *En permanence* : la stance est remise dans l'état voulu dès qu'elle en sort.
-  - *À certains moments* (combinables) : entrée en zone / changement de job / résurrection, compte à rebours (X s avant la fin), au pull (option boss uniquement), reprise de l'instance après un wipe.
+  - *À certains moments* (combinables) : entrée en zone, résurrection, changement de job, compte à rebours (X s avant la fin), au pull (option boss uniquement), reprise de l'instance après un wipe.
 - **Options** : seulement en instance, autorisé ou non en combat, affichage dans la barre d'infos serveur, message dans le chat.
 - **Langue** : auto (suit Dalamud), anglais ou français.
 

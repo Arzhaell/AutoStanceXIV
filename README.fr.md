@@ -61,6 +61,6 @@ Comme tout outil tiers, l'utilisation de Dalamud et de ses plugins est contraire
 Pousser un tag annoté `vX.Y.Z` suffit : le workflow GitHub lance les tests, compile le plugin, crée la release (ses notes sont le message du tag) et met à jour `repo.json`.
 
 ```bash
-git tag -a v1.2.0 -F notes.txt
+git tag -a v1.2.0 --cleanup=verbatim -F notes.txt
 git push origin v1.2.0
 ```

@@ -1,6 +1,6 @@
 # Publie une nouvelle version quand on pousse un tag annoté vX.Y.Z. Son message : une ligne de titre,
 # une ligne vide, puis les notes de version FR + EN (c'est ce qui apparaît sur la release) :
-#   git tag -a v1.2.0 -F notes.txt
+#   git tag -a v1.2.0 --cleanup=verbatim -F notes.txt   (verbatim : garde les titres « ## » des notes)
 #   git push origin v1.2.0
 # Le workflow compile le plugin, crée la release GitHub avec latest.zip,
 # puis met à jour repo.json (le fichier que Dalamud lit) sur la branche main.

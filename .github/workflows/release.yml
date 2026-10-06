@@ -1,4 +1,5 @@
-# Publie une nouvelle version quand on pousse un tag annoté vX.Y.Z (son message = notes de version FR + EN) :
+# Publie une nouvelle version quand on pousse un tag annoté vX.Y.Z. Son message : une ligne de titre,
+# une ligne vide, puis les notes de version FR + EN (c'est ce qui apparaît sur la release) :
 #   git tag -a v1.2.0 -F notes.txt
 #   git push origin v1.2.0
 # Le workflow compile le plugin, crée la release GitHub avec latest.zip,
@@ -52,8 +53,15 @@ jobs:
           if ($LASTEXITCODE -eq 0) {
             gh release upload $tag $zip --clobber
           } else {
-            # Notes de version (FR + EN) : le message du tag annoté.
-            gh release create $tag $zip --title "AutoStanceXIV $tag" --notes-from-tag
+            # Notes de version (FR + EN) : le corps du message du tag annoté, sous sa première ligne.
+            # actions/checkout récupère le tag sans son message : on le relit depuis le dépôt.
+            git fetch --force origin "refs/tags/${tag}:refs/tags/${tag}"
+            git tag --list $tag --format='%(contents:body)' | Out-File notes.md -Encoding utf8
+            if ((Get-Content notes.md -Raw).Trim()) {
+              gh release create $tag $zip --title "AutoStanceXIV $tag" --notes-file notes.md
+            } else {
+              gh release create $tag $zip --title "AutoStanceXIV $tag" --generate-notes
+            }
           }
 
       - name: Mettre à jour repo.json

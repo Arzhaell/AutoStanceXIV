@@ -58,9 +58,9 @@ Comme tout outil tiers, l'utilisation de Dalamud et de ses plugins est contraire
 
 ## Publier une nouvelle version
 
-Pousser un tag `vX.Y.Z` suffit : le workflow GitHub compile le plugin, crée la release et met à jour `repo.json`.
+Pousser un tag annoté `vX.Y.Z` suffit : le workflow GitHub lance les tests, compile le plugin, crée la release (ses notes sont le message du tag) et met à jour `repo.json`.
 
 ```bash
-git tag v1.1.0
-git push origin v1.1.0
+git tag -a v1.2.0 -F notes.txt
+git push origin v1.2.0
 ```

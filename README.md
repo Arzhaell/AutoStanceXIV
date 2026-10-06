@@ -58,9 +58,9 @@ Like any third-party tool, using Dalamud and its plugins is against the FFXIV Te
 
 ## Releasing a new version
 
-Pushing a `vX.Y.Z` tag is all it takes: the GitHub workflow builds the plugin, creates the release and updates `repo.json`.
+Pushing an annotated `vX.Y.Z` tag is all it takes: the GitHub workflow runs the tests, builds the plugin, creates the release (its notes are the tag message) and updates `repo.json`.
 
 ```bash
-git tag v1.1.0
-git push origin v1.1.0
+git tag -a v1.2.0 -F notes.txt
+git push origin v1.2.0
 ```

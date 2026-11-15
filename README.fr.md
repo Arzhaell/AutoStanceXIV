@@ -16,9 +16,11 @@ Plugin [Dalamud](https://github.com/goatcorp/Dalamud) pour Final Fantasy XIV qui
 1. En jeu, tape `/xlsettings` et ouvre l'onglet **Expérimental**.
 2. Dans **Custom Plugin Repositories**, ajoute cette adresse, clique sur **+**, coche la case puis enregistre :
    ```
-   https://raw.githubusercontent.com/Arzhaell/AutoStanceXIV/main/repo.json
+   https://raw.githubusercontent.com/Arzhaell/ArzhaelXIVPlugins/main/repo.json
    ```
 3. Tape `/xlplugins`, cherche **AutoStanceXIV** et installe-le.
+
+Cette adresse donne accès à [tous mes plugins](https://github.com/Arzhaell/ArzhaelXIVPlugins/blob/main/README.fr.md). Si tu avais déjà ajouté l'adresse propre à ce plugin (`https://raw.githubusercontent.com/Arzhaell/AutoStanceXIV/main/repo.json`), elle marche toujours ; avec les deux, chaque plugin apparaît deux fois ([changer d'adresse](https://github.com/Arzhaell/ArzhaelXIVPlugins/blob/main/README.fr.md#installation)).
 
 ## Utilisation
 

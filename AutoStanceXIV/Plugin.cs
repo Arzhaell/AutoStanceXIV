@@ -21,11 +21,13 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IDtrBar DtrBar { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
     [PluginService] internal static IDutyState DutyState { get; private set; } = null!;
+    [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
 
     private readonly WindowSystem windowSystem = new("AutoStanceXIV");
     private readonly ConfigWindow configWindow;
     private readonly StanceController controller;
+    private readonly FateSync fateSync;
     private readonly IDtrBarEntry dtrEntry;
 
     public Configuration Configuration { get; }
@@ -37,6 +39,7 @@ public sealed class Plugin : IDalamudPlugin
             Configuration.Save();
         Loc.Update(Configuration.Language);
         controller = new StanceController(Configuration);
+        fateSync = new FateSync(Configuration);
 
         configWindow = new ConfigWindow(this);
         windowSystem.AddWindow(configWindow);
@@ -90,6 +93,7 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenConfigUi -= configWindow.Toggle;
         PluginInterface.UiBuilder.OpenMainUi -= configWindow.Toggle;
         windowSystem.RemoveAllWindows();
+        fateSync.Dispose();
         controller.Dispose();
     }
 

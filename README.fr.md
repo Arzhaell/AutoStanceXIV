@@ -37,6 +37,7 @@ Plugin [Dalamud](https://github.com/goatcorp/Dalamud) pour Final Fantasy XIV qui
   - *En permanence* : la stance est remise dans l'état voulu dès qu'elle en sort.
   - *À certains moments* (combinables) : entrée en zone, résurrection, changement de job, compte à rebours (X s avant la fin), au pull (option boss uniquement), reprise de l'instance après un wipe.
 - **Options** : seulement en instance, autorisé ou non en combat, affichage dans la barre d'infos serveur, message dans le chat.
+- **Synchronisation automatique du niveau dans les ALÉA** (désactivée par défaut ; dans l'onglet *ALÉA* en mode avancé) : quand tu entres dans un ALÉA trop bas pour ton niveau, ton niveau est synchronisé comme avec le bouton « Synchroniser », une fois descendu de monture. Si tu te désynchronises à la main, il te laisse jusqu'au prochain ALÉA.
 - **Langue** : auto (suit Dalamud), anglais ou français.
 
 Changer de mode rapidement :

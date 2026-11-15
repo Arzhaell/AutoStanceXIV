@@ -79,6 +79,9 @@ public class Configuration : IPluginConfiguration
     public bool ShowInServerBar { get; set; } = true;
     public bool ChatFeedback { get; set; } = true;
 
+    /// <summary>Synchronise le niveau en entrant dans un ALÉA (voir FateSync).</summary>
+    public bool AutoFateSync { get; set; } = false;
+
     // Reçoit les propriétés des anciennes versions qui n'existent plus à la racine (voir Migrate).
     [JsonExtensionData(WriteData = false)]
     private IDictionary<string, JToken>? legacy;

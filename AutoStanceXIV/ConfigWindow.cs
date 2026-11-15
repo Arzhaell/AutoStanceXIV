@@ -48,6 +48,7 @@ public sealed class ConfigWindow : Window
         {
             Checkbox(Loc.T("Only in duties (dungeon, raid, trial…)", "Seulement en instance (donjon, raid, défi…)"),
                      configuration.OnlyInDuty, v => configuration.OnlyInDuty = v);
+            DrawFateSyncOption();
         }
 
         Checkbox(Loc.T("Allow in combat", "Autoriser en combat"), configuration.AllowInCombat, v => configuration.AllowInCombat = v);
@@ -102,12 +103,29 @@ public sealed class ConfigWindow : Window
                 continue;
 
             DrawProfile(profile);
+            if (kind == InstanceKind.OpenWorld)
+            {
+                ImGui.Separator();
+                DrawFateSyncOption();
+            }
+
             DrawCopyToAll(kind);
             ImGui.EndTabItem();
         }
 
         tabToSelect = null;
         ImGui.EndTabBar();
+    }
+
+    // Réglage global, affiché dans l'onglet ALÉA en mode avancé et dans les options en mode classique.
+    private void DrawFateSyncOption()
+    {
+        var configuration = plugin.Configuration;
+        Checkbox(Loc.T("Automatic level sync in FATEs", "Synchronisation automatique du niveau dans les ALÉA"),
+                 configuration.AutoFateSync, v => configuration.AutoFateSync = v);
+        Tooltip(Loc.T(
+            "When you enter a FATE above your level range, syncs your level\n(like the \"Level Sync\" button). Waits until you are off your mount.\nIf you unsync by hand, it leaves you alone until the next FATE.",
+            "Quand tu entres dans un ALÉA trop bas pour ton niveau, synchronise ton niveau\n(comme le bouton « Synchroniser »). Attend que tu sois descendu de monture.\nSi tu te désynchronises à la main, il te laisse jusqu'au prochain ALÉA."));
     }
 
     private static string ModeLabel(StanceMode mode) => mode switch

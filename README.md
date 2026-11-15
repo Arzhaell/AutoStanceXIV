@@ -37,6 +37,7 @@ A [Dalamud](https://github.com/goatcorp/Dalamud) plugin for Final Fantasy XIV th
   - *Always*: the stance is put back in the desired state as soon as it changes.
   - *At specific moments* (can be combined): zone change, resurrection, job change, countdown (X s before the end), on pull (optionally bosses only), duty recommence after a wipe.
 - **Options**: only in duties, allow in combat, show in the server info bar, chat message.
+- **Automatic level sync in FATEs** (off by default; in the *Open world* tab in advanced mode): when you enter a FATE above your level range, your level is synced like with the "Level Sync" button, once you are off your mount. If you unsync by hand, it leaves you alone until the next FATE.
 - **Language**: auto (follows Dalamud), English or French.
 
 Quick mode switching:
